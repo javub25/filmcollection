@@ -2,6 +2,7 @@
 
 let page = 1;
 
+
 export let evento_btnAnterior = (Year) =>
 {
     const btnAnterior = document.querySelector("#btnAnterior");
@@ -75,14 +76,23 @@ export const Menu = () =>
     });
 }
 
+//Comprovamos que el año sea correcto
+const checkYear = (Year) =>
+{
+    let expr = new RegExp(/^[1-9]{4}$/);
+
+    return expr.test(Year);
+}
+
 export async function cargarSeries(Year) 
 {
     try
     { 
-        //Y
-        //La API nos devolverá las series del año que eliga el usuario ordenadas de menor a mayor
-        const respuesta = await axios.get(`https://api.themoviedb.org/3/discover/tv?api_key=91e2cd3a9a469c7556f0539d4e755dc3&first_air_date_year=${Year}&sort_by=first_air_date.desc&page=${page}&language=es-ESP`);
-        if(respuesta.status === 200)
+        if(checkYear(Year) === true)
+        {
+            //La API nos devolverá las series del año que eliga el usuario ordenadas de menor a mayor
+            const respuesta = await axios.get(`https://api.themoviedb.org/3/discover/tv?api_key=91e2cd3a9a469c7556f0539d4e755dc3&first_air_date_year=${Year}&sort_by=first_air_date.desc&page=${page}&language=es-ESP`);
+            if(respuesta.status === 200)
         {
             let datos = respuesta.data;
             const contenedor = document.querySelector(".contenedor");
@@ -132,17 +142,21 @@ export async function cargarSeries(Year)
                     }      
                 }
             )
-            
-           
-        }
-        else if(respuesta.status === 404) 
-            throw new Error("La pelicula no se encuentra");
+            }
+            else if(respuesta.status === 404) 
+                throw new Error("La pelicula no se encuentra");
         
-        else if(respuesta.status === 401) 
-            throw new Error("Servidor no disponible");
+            else if(respuesta.status === 401) 
+                throw new Error("Servidor no disponible");
 
-        else 
-            throw new Error("Error de Busqueda");
+            else 
+                throw new Error("Error de Busqueda");
+        }
+        //Mostraremos un mensaje de error cuando no se haya escrito un año correcto
+        else
+        {
+            alert("Año incorrecto");
+        }
     }
     catch(error)
     {
