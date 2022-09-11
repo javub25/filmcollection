@@ -79,6 +79,7 @@ export async function cargarSeries(Year)
 {
     try
     { 
+        //Y
         //La API nos devolverá las series del año que eliga el usuario ordenadas de menor a mayor
         const respuesta = await axios.get(`https://api.themoviedb.org/3/discover/tv?api_key=91e2cd3a9a469c7556f0539d4e755dc3&first_air_date_year=${Year}&sort_by=first_air_date.desc&page=${page}&language=es-ESP`);
         if(respuesta.status === 200)
