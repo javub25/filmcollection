@@ -1,0 +1,171 @@
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+h1, h3
+{
+	text-align: center;
+	margin:30px 0px 0px;
+}
+
+body {
+	font-family: 'Montserrat', sans-serif;
+	background: #e0e0e0;
+	color: #1d1d1d;
+}
+
+
+.material-symbols-outlined
+{
+	font-size:23px;
+	line-height:0px;
+	margin:9px 0px 0px;
+	color:white;
+}
+
+.contenedor
+{
+	width:60%;
+	margin: 40px auto;
+	display:grid;
+	grid-template-columns: auto auto auto;
+	column-gap: 20px;
+	row-gap: 30px;
+	text-align: center;
+	padding:0px 0px 60px;
+}
+
+.contenedor .titulo {
+	font-size: 16px;
+	font-weight: 600;
+}
+
+.contenedor .poster {
+	width: 100%;
+	margin-bottom: 10px;
+	border-radius: 15px;
+}
+
+input[type="number"]
+{
+	border-radius: 12px;
+	border:none;
+	width:20%;
+	padding:2px 10px;
+}
+
+.imagenPeli, .textoPeli 
+{
+	border-radius: 12px;
+	
+}
+.textoPeli
+{
+	background-color: white;
+	padding:12px;
+	margin: 11px 0px 20px;
+}
+
+.imagenPeli
+{
+	width:100%;
+}
+.imagenPrincipal
+{
+	width:220px;
+}
+
+p{
+	font-size:15px;
+	line-height:18px;
+}
+.NotaPeli
+{
+	padding:5px;
+	border-radius: 15px;
+	background-color:green;
+	color:white;
+}
+
+.menu
+{
+	padding:10px 20px;
+	background-color:#100a1f;
+}
+.menu > div
+{
+	padding:10px 0px;
+	color:white;
+}
+
+.menu_flex, .menu_apartados > :first-child
+{
+	display:flex;
+}
+.getYear
+{
+	display:grid;
+	text-align:center;
+	grid-template-columns: auto;
+	row-gap:12px;
+	padding:30px 0px;
+}
+
+
+.menu_flex > :first-child
+{
+	padding:0px 20px 0px 0px;
+}
+
+.menu_flex > :last-child
+{
+	padding:0px 0px 0px 45%;
+}
+
+.menu_apartados > div
+{
+	padding:10px 0px;
+
+}
+
+.paginacion {
+	position: fixed;
+	bottom: 0;
+	background: #100a1f;
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	gap: 20px;
+	padding: 10px;
+}
+
+.paginacion button, .button {
+	cursor: pointer;
+	border: none;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	height: 40px;
+	width: 200px;
+	background: #241744;
+	color: #fff;
+	border-radius: 100px;
+	font-family: 'Montserrat', sans-serif;
+	font-weight: 600;
+	transition: .3s ease all;
+}
+
+.paginacion button:hover, .button:hover {
+	background: #137c32;
+}
+
+/*Responsive*/
+@media only screen and (max-width: 640px) {
+	.contenedor
+	{
+		display:block;
+	}
+}
