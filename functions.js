@@ -80,12 +80,12 @@ export async function cargarSeries(Year)
     try
     { 
         //La API nos devolverá las series del año que eliga el usuario ordenadas de menor a mayor
-        const respuesta = await axios.get(`https://api.themoviedb.org/3/discover/tv?api_key=91e2cd3a9a469c7556f0539d4e755dc3&first_air_date_year=${Year}&sort_by=first_air_date.asc&page=${page}&language=es-ESP`);
+        const respuesta = await axios.get(`https://api.themoviedb.org/3/discover/tv?api_key=91e2cd3a9a469c7556f0539d4e755dc3&first_air_date_year=${Year}&sort_by=first_air_date.desc&page=${page}&language=es-ESP`);
         if(respuesta.status === 200)
         {
             let datos = respuesta.data;
             const contenedor = document.querySelector(".contenedor");
-            
+
             let serie = '';
             datos.results.map((series) =>
                 {
