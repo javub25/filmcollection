@@ -79,7 +79,8 @@ export const Menu = () =>
 //Comprovamos que el año sea correcto
 const checkYear = (Year) =>
 {
-    let expr = new RegExp(/^[1-9]{4}$/);
+    //Expresion que comprueba que el año este entre 1900 y 2080
+    let expr = new RegExp(/^(19|20)[\d]{2,2}$/);
 
     return expr.test(Year);
 }
