@@ -1,6 +1,6 @@
 let page = 1;
+const api_key = '91e2cd3a9a469c7556f0539d4e755dc3';
 
-//Evento que cargará la anterior página del catálogo de series
 export let evento_btnAnterior = (Year) =>
 {
     const btnAnterior = document.querySelector("#btnAnterior");
@@ -90,25 +90,54 @@ export const checkYear = (Year) =>
     return expr.test(Year);
 }
 
+
+async function requestgenresTVSHOWS(genres, series)
+{
+    let respuesta = await axios.get(`https://api.themoviedb.org/3/genre/movie/list?api_key=${api_key}`)
+    
+    if (respuesta.status === 200)
+    {
+        let datos = respuesta.data;
+
+        series.genre_ids.forEach((genero_id) => 
+        {
+            datos.genres.forEach((genero) => 
+            {
+                if(genero_id === genero.id)
+                {
+                    genres.push(genero.name);
+                    console.log(genres);
+                }
+            })
+            
+        })
+    } 
+}
 export async function requestTVShows(Year) 
 {
     try
     { 
         //La API nos devolverá las series del año que eliga el usuario ordenadas de menor a mayor
-        const respuesta = await axios.get(`https://api.themoviedb.org/3/discover/tv?api_key=91e2cd3a9a469c7556f0539d4e755dc3&first_air_date_year=${Year}&sort_by=first_air_date.desc&page=${page}&language=es-ESP`);
+        const respuesta = await axios.get(`https://api.themoviedb.org/3/discover/tv?api_key=${api_key}&first_air_date_year=${Year}&sort_by=first_air_date.desc&page=${page}&language=es-ESP`);
         if(respuesta.status === 200)
         {
             let datos = respuesta.data;
             const contenedor = document.querySelector(".contenedor");
 
             let serie = '';
+
             datos.results.map((series) =>
             {
                 //Obtenemos los últimos 4 digitos del año de cada serie, para mostrar únicamente los del año que ponga el usuario
                 let getYear = series.first_air_date.slice(0,4);
-
+                
                     if(getYear === Year)
                     {
+                        let genres = [];
+                        requestgenresTVSHOWS(genres, series);
+
+                        //console.log(genres);
+
                         try
                         {
                             serie+= 
@@ -127,6 +156,7 @@ export async function requestTVShows(Year)
                                         <br/><br/>
                                         ${series.overview}
                                         <br/><br/>
+                                       
                                         Nota general: <span class="NotaPeli">${series.vote_average}</span>
                                     </p>
                                 </div>
@@ -155,3 +185,7 @@ export async function requestTVShows(Year)
         console.error(error.message);
     }
 }
+
+
+
+
