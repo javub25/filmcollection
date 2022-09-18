@@ -1,5 +1,6 @@
 let page = 1;
 const api_key = '91e2cd3a9a469c7556f0539d4e755dc3';
+let total_pages;
 
 export let evento_btnAnterior = (Year) =>
 {
@@ -19,7 +20,7 @@ export let evento_btnSiguiente = (Year) =>
     const btnSiguiente = document.querySelector("#btnSiguiente");
     btnSiguiente.addEventListener("click", () => 
     {
-        if(page < 1000)
+        if(page < total_pages)
         {
             page++;
             requestTVShows(Year);
@@ -90,89 +91,103 @@ export const checkYear = (Year) =>
     return expr.test(Year);
 }
 
+//Peticion que nos saldrá los identificadores con cada uno de los nombres de cada genero
+const requestgenresTVSHOWS = () => axios.get(`https://api.themoviedb.org/3/genre/movie/list?api_key=${api_key}&language=es-ES`);
 
-async function requestgenresTVSHOWS(genres, series)
-{
-    let respuesta = await axios.get(`https://api.themoviedb.org/3/genre/movie/list?api_key=${api_key}`)
-    
-    if (respuesta.status === 200)
-    {
-        let datos = respuesta.data;
 
-        series.genre_ids.forEach((genero_id) => 
-        {
-            datos.genres.forEach((genero) => 
-            {
-                if(genero_id === genero.id)
-                {
-                    genres.push(genero.name);
-                    console.log(genres);
-                }
-            })
-            
-        })
-    } 
-}
 export async function requestTVShows(Year) 
 {
     try
     { 
         //La API nos devolverá las series del año que eliga el usuario ordenadas de menor a mayor
-        const respuesta = await axios.get(`https://api.themoviedb.org/3/discover/tv?api_key=${api_key}&first_air_date_year=${Year}&sort_by=first_air_date.desc&page=${page}&language=es-ESP`);
+        const respuesta = await axios.get(`https://api.themoviedb.org/3/discover/tv?api_key=${api_key}&first_air_date_year=${Year}&sort_by=first_air_date.desc&page=${page}&language=es-ES`);
         if(respuesta.status === 200)
         {
             let datos = respuesta.data;
+            //Obtenemos el numero total de paginas
+            total_pages = datos.total_pages;
             const contenedor = document.querySelector(".contenedor");
 
             let serie = '';
 
             datos.results.map((series) =>
             {
-                //Obtenemos los últimos 4 digitos del año de cada serie, para mostrar únicamente los del año que ponga el usuario
-                let getYear = series.first_air_date.slice(0,4);
-                
+                    //Obtenemos los últimos 4 digitos del año de cada serie, para mostrar únicamente los del año que ponga el usuario
+                    let getYear = series.first_air_date.slice(0,4);
+                  
                     if(getYear === Year)
                     {
+                        let TVshowMark, url, overview;
+
+                        //Controlamos que si no existe ninguna imagen, añadamos una
+                        if(series.poster_path!==null) url = `https://image.tmdb.org/t/p/w500/${series.poster_path}`;
+                        else url = `https://www.themoviedb.org/assets/2/v4/glyphicons/basic/glyphicons-basic-38-picture-grey-c2ebdbb057f2a7614185931650f8cee23fa137b93812ccb132b9df511df1cfac.svg`;
+                        
+                        //Si no existe ninguna sinopsis en el servicio se lo indicamos al usuario
+                        if(series.overview!=='') overview = series.overview;
+                        else overview = "No tenemos una sinopsis disponible.";
+                        
+                        //Si no existe ninguna nota
+                        if(series.vote_average === 0) TVshowMark = "No definida";
+                        else TVshowMark = series.vote_average;
+                        
+                        //Almacenará cada uno de los generos de las series
                         let genres = [];
-                        requestgenresTVSHOWS(genres, series);
 
-                        //console.log(genres);
-
-                        try
-                        {
-                            serie+= 
-                            `
-                            <div>
-                                <div>
-                                    <img src=https://image.tmdb.org/t/p/w500/${series.poster_path} alt="" class="imagenPeli"/>
-                                </div>
-                                <div class="textoPeli">
-                                    <h3>
-                                        ${series.name}
-                                    </h3>
-        
-                                    <p>
-                                         ${series.first_air_date}
-                                        <br/><br/>
-                                        ${series.overview}
-                                        <br/><br/>
-                                       
-                                        Nota general: <span class="NotaPeli">${series.vote_average}</span>
-                                    </p>
-                                </div>
-                            </div>   
-                        `
-                        contenedor.innerHTML = serie;
-                            if(series.poster_path === null)
+                        //De forma asincrona extraeremos los nombres de los generos coincidiendo con sus respectivos numeros
+                        requestgenresTVSHOWS()
+                        .then(resolve => {
+                            if (resolve.status === 200)
                             {
-                                throw new Error(`La imagen no fue añadida en ${series.name}`);
-                            }  
-                        }
-                        catch(error)
+                                let datos = resolve.data;
+                                series.genre_ids.forEach((genero_id) => 
+                                {
+                                    datos.genres.forEach((genero) => 
+                                    {
+                                        if(genero_id === genero.id)
+                                        {
+                                            genres.push(genero.name);
+                                            console.log(genres);
+                                        }
+                                    })
+                                })
+                                try
+                                {
+                                    serie+= 
+                                    `
+                                    <div>
+                                        <div>
+                                            <img src=${url} alt="" class="imagenPeli"/>
+                                        </div>
+                                        <div class="textoPeli">
+                                            <h3>
+                                                ${series.name}
+                                            </h3>
+                                            <p>
+                                                 ${series.first_air_date}
+                                                <br/><br/>
+                                                ${overview}
+                                                <br/><br/>
+                                                ${genres}
+                                                <br/><br/>
+                                                Nota: <span class="NotaPeli">${TVshowMark}</span>
+                                            </p>
+                                        </div>
+                                    </div>   
+                                    `
+                                    contenedor.innerHTML = serie;
+                                }
+                                catch(error)
+                                {
+                                    console.error(error.message);
+                                }     
+                            }
+                        })
+                        .catch(error => 
                         {
-                            console.error(error.message);
-                        }  
-                    }      
+                            console.log(error);
+                        })
+                    }
                 }
             )
         }
@@ -185,7 +200,3 @@ export async function requestTVShows(Year)
         console.error(error.message);
     }
 }
-
-
-
-
