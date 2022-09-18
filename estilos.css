@@ -27,7 +27,7 @@ body {
 
 .contenedor
 {
-	width:60%;
+	width:50%;
 	margin: 40px auto;
 	display:grid;
 	grid-template-columns: auto auto auto;
@@ -83,7 +83,7 @@ p{
 }
 .NotaPeli
 {
-	padding:5px;
+	padding:5px 8px;
 	border-radius: 15px;
 	background-color:green;
 	color:white;
