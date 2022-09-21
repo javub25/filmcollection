@@ -94,6 +94,37 @@ export const checkYear = (Year) =>
 //Peticion que nos saldrá los identificadores con cada uno de los nombres de cada genero
 const requestgenresTVSHOWS = () => axios.get(`https://api.themoviedb.org/3/genre/movie/list?api_key=${api_key}&language=es-ES`);
 
+//Mostrará un menú con la suma total de generos según el año escojido
+let TotalGenres = [];
+
+let showTotalGenres = (genres, TotalGenres) =>
+{
+    /*Cada vez que se vayan añadiendo nombres de generos en la lista genres lo añadiremos en un listado de objetos
+    para aparte de tener el nombre guardar las veces que aparece cada genero*/
+    genres.forEach((genres_name) => 
+    {
+        let found = false;
+
+        TotalGenres.find((new_genre) => 
+        {
+            //Iremos sumando cuando el genero exista
+            if(genres_name === new_genre.genre) 
+            {
+                new_genre.count++;
+                found = true;
+            }
+        })
+
+        //En caso de que el genero no este en el objeto, lo vamos añadir con una apariencia de 1
+        if(found === false)
+        {
+            TotalGenres.push({
+                genre: genres_name,
+                count: 1
+            })
+        }
+    })
+}
 
 export async function requestTVShows(Year) 
 {
@@ -131,26 +162,28 @@ export async function requestTVShows(Year)
                         if(series.vote_average === 0) TVshowMark = "No definida";
                         else TVshowMark = series.vote_average;
                         
-                        //Almacenará cada uno de los generos de las series
-                        let genres = [];
-
                         //De forma asincrona extraeremos los nombres de los generos coincidiendo con sus respectivos numeros
                         requestgenresTVSHOWS()
                         .then(resolve => {
                             if (resolve.status === 200)
                             {
-                                let datos = resolve.data;
+                                let datos = resolve.data, genres = [];
+
                                 series.genre_ids.forEach((genero_id) => 
                                 {
                                     datos.genres.forEach((genero) => 
                                     {
                                         if(genero_id === genero.id)
                                         {
-                                            genres.push(genero.name);
-                                            console.log(genres);
+                                            genres.push(genero.name); 
                                         }
                                     })
                                 })
+                                //Funcion que guardará en la lista TotalGenres cuantas veces se repite cada genero en cada página
+                                showTotalGenres(genres, TotalGenres);
+                                
+                                console.log(TotalGenres);
+
                                 try
                                 {
                                     serie+= 
