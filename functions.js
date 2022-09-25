@@ -2,7 +2,8 @@ let page = 1;
 const api_key = '91e2cd3a9a469c7556f0539d4e755dc3';
 let total_pages;
 
-export let evento_btnAnterior = (Year) =>
+//Evento que cargará la anterior página del catálogo de series basandose en el año y genero
+export let evento_btnAnterior = (Year, GenreId) =>
 {
     const btnAnterior = document.querySelector("#btnAnterior");
     btnAnterior.addEventListener("click", () => 
@@ -10,12 +11,12 @@ export let evento_btnAnterior = (Year) =>
         if(page > 1)
         {
             page--;
-            requestTVShows(Year);
+            requestTVShows(Year, GenreId);
         }
     })
 }
-//Evento que cargará la siguiente página del catálogo de series
-export let evento_btnSiguiente = (Year) =>
+//Evento que cargará la siguiente página del catálogo de series basandose en el año y genero
+export let evento_btnSiguiente = (Year, GenreId) =>
 {
     const btnSiguiente = document.querySelector("#btnSiguiente");
     btnSiguiente.addEventListener("click", () => 
@@ -23,11 +24,11 @@ export let evento_btnSiguiente = (Year) =>
         if(page < total_pages)
         {
             page++;
-            requestTVShows(Year);
+            requestTVShows(Year, GenreId);
         }
     })
 }
-//Obtenemos el año que el usuario escriba a partir del evento
+//Obtenemos el año que haya escojido que el usuario escriba a partir del evento
 export const getYear = Year_User => {
     const button = document.querySelector(".button");
     button.addEventListener("click", () => {
@@ -36,6 +37,36 @@ export const getYear = Year_User => {
         Year_User(Year);
     });
   }
+
+  /// TESTING ---  ///
+ 
+  //Obtenemos el id del genero a partir del input de tipo radio que haya clicado el usuario
+  export const getGenre = GenreId => {
+    //Accedemos al div que contendrá cada uno de los inputs y nombres de generos
+    let genres = document.querySelector(".genres");
+    
+    //Solo obtendremos el numero de genero cuando al div se le hayan añadido los inputs y nombres
+    if(genres.hasChildNodes())
+    {
+        genres = document.querySelectorAll(".genres");
+        //Se recorrerá la lista en busca del input que el usuario clique
+        genres.forEach(input => 
+        {
+            input.addEventListener("click", (value) => {
+                //Funcion callback que devolverá el id del genero escojido
+                GenreId(value.target.defaultValue);
+            });
+        })
+    }
+    /*Si el div no tiene ninguna información no habrá genero, devolviendo una cadena vacia
+    para que la petición de las series se base unicamente del año*/
+    else
+    {
+        GenreId("");
+    }
+  }
+
+ 
   //Mostramos el menú
   export const Menu = () =>
   {
@@ -94,44 +125,25 @@ export const checkYear = (Year) =>
 //Peticion que nos saldrá los identificadores con cada uno de los nombres de cada genero
 const requestgenresTVSHOWS = () => axios.get(`https://api.themoviedb.org/3/genre/movie/list?api_key=${api_key}&language=es-ES`);
 
-//Mostrará un menú con la suma total de generos según el año escojido
-let TotalGenres = [];
-
-let showTotalGenres = (genres, TotalGenres) =>
+/*Mostrará todos los generos en un menu de inputs de tipo radio 
+para que el usuario pueda escojer uno y se cargen las series del genero y año especificados*/
+const showGenres = (genre, containerGenres) => 
 {
-    /*Cada vez que se vayan añadiendo nombres de generos en la lista genres lo añadiremos en un listado de objetos
-    para aparte de tener el nombre guardar las veces que aparece cada genero*/
-    genres.forEach((genres_name) => 
-    {
-        let found = false;
+    let genresName = document.createElement("span"), 
+    input = document.createElement("input");
+    genresName.textContent = genre.name;
+    input.type="radio", input.value=`${genre.id}`, input.name="genres";
 
-        TotalGenres.find((new_genre) => 
-        {
-            //Iremos sumando cuando el genero exista
-            if(genres_name === new_genre.genre) 
-            {
-                new_genre.count++;
-                found = true;
-            }
-        })
-
-        //En caso de que el genero no este en el objeto, lo vamos añadir con una apariencia de 1
-        if(found === false)
-        {
-            TotalGenres.push({
-                genre: genres_name,
-                count: 1
-            })
-        }
-    })
+    containerGenres.appendChild(input), containerGenres.appendChild(genresName);
 }
 
-export async function requestTVShows(Year) 
+//Peticion que obtendremos las series a partir del año escojido o del genero
+export async function requestTVShows(Year, GenreId) 
 {
     try
     { 
         //La API nos devolverá las series del año que eliga el usuario ordenadas de menor a mayor
-        const respuesta = await axios.get(`https://api.themoviedb.org/3/discover/tv?api_key=${api_key}&first_air_date_year=${Year}&sort_by=first_air_date.desc&page=${page}&language=es-ES`);
+        const respuesta = await axios.get(`https://api.themoviedb.org/3/discover/tv?api_key=${api_key}&first_air_date_year=${Year}&sort_by=first_air_date.desc&page=${page}&with_genres=${GenreId}&language=es-ES`);
         if(respuesta.status === 200)
         {
             let datos = respuesta.data;
@@ -167,22 +179,24 @@ export async function requestTVShows(Year)
                         .then(resolve => {
                             if (resolve.status === 200)
                             {
-                                let datos = resolve.data, genres = [];
+                                let datos = resolve.data, genresName = [];
+                                let containerGenres = document.querySelector(".genres"); 
 
-                                series.genre_ids.forEach((genero_id) => 
+                                series.genre_ids.forEach((id) => 
                                 {
-                                    datos.genres.forEach((genero) => 
+                                    datos.genres.forEach((genre) => 
                                     {
-                                        if(genero_id === genero.id)
+                                        if(id === genre.id)
                                         {
-                                            genres.push(genero.name); 
+                                            genresName.push(genre.name);
+                                        }
+
+                                        if(containerGenres.childNodes.length < 38)
+                                        {
+                                            showGenres(genre, containerGenres);
                                         }
                                     })
                                 })
-                                //Funcion que guardará en la lista TotalGenres cuantas veces se repite cada genero en cada página
-                                showTotalGenres(genres, TotalGenres);
-                                
-                                console.log(TotalGenres);
 
                                 try
                                 {
@@ -201,7 +215,7 @@ export async function requestTVShows(Year)
                                                 <br/><br/>
                                                 ${overview}
                                                 <br/><br/>
-                                                ${genres}
+                                                ${genresName}
                                                 <br/><br/>
                                                 Nota: <span class="NotaPeli">${TVshowMark}</span>
                                             </p>
