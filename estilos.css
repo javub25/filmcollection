@@ -16,6 +16,14 @@ body {
 	color: #1d1d1d;
 }
 
+.header_img
+{
+	background-image: url("https://angular-movies-c91ba.firebaseapp.com/background-main.jpg");
+	background-attachment: fixed;
+	background-size: cover;
+	height:400px;
+}
+
 
 .material-symbols-outlined
 {
@@ -104,6 +112,8 @@ p{
 {
 	padding:10px 20px;
 	background-color:#100a1f;
+	background-attachment: fixed;
+
 }
 .menu > div
 {
@@ -111,9 +121,11 @@ p{
 	color:white;
 }
 
+
 .menu_flex, .menu_apartados > :first-child
 {
 	display:flex;
+
 }
 
 .menu_flex > :first-child
@@ -175,5 +187,14 @@ p{
 	.paddingMobile
 	{
 		padding:0px 20px;
+	}
+	.menu_apartados > div
+	{
+		text-align: center;
+	}
+	.material-symbols-outlined
+	{
+		margin-left:auto;
+		margin-right:auto;
 	}
 }
