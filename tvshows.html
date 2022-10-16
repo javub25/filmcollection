@@ -41,23 +41,29 @@
 	</div>
 	<div class="paddingMobile">
 		<h1>TV Shows</h1>
-    	<h3>Busca series a partir de un año</h3>
 	</div>
 	
 
-	<form action="tvshows.js" method="post" class="FormFecha">
-		<div class="getYear">
+	<form action="tvshows.js" method="post" class="FormData">
+		<div class="data">
 			<div>
-				<p>Año</p>
+				<p>Year</p>
 			</div>
 			<div>
 				<input type="number" name="Year"></input>
+			</div>
+
+			<div>
+				<p>Name</p>
+			</div>
+			<div>
+				<input type="text" name="Tvshow"></input>
 			</div>
 		</div>
 
 		<div class="button" style="margin:auto">
 			<div style="padding-right:9px; margin-bottom:5px">
-				Enviar
+				Send
 			</div>
 
 			<div>
@@ -68,15 +74,11 @@
 		</div>
 	</form>
 
-	<div class="genres"></div>
-	
 	<div class="contenedor" id="contenedor"></div>
 
 	
-
 	<div class="paginacion">
-		<button id="btnAnterior">Anterior</button>
-		<button id="btnSiguiente">Siguiente</button>
+		
 	</div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.27.2/axios.min.js" integrity="sha512-odNmoc1XJy5x1TMVMdC7EMs3IVdItLPlCeL5vSUPN2llYKMJ2eByTTAIiiuqLg+GdNr9hF6z81p27DArRFKT7A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 	<script type="module" src="tvshows.js"></script>
