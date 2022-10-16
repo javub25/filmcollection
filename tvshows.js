@@ -1,22 +1,24 @@
-import {Menu, getYear, getGenre, checkYear, requestTVShows, evento_btnAnterior, evento_btnSiguiente} from './functions.js';
+import {Menu, getData, checkYear, requestTVShows} from './functions.js';
 
 Menu();
 
-getYear((Year_User) => {
-    /*En caso de que el año sea correcto y aparte tenga un valor, cargamos las series con el año escogido.
-    */
-    if(checkYear(Year_User) && Year_User!==undefined)
+let getYear;
+
+//We'll define a variable called getYear to have access in it in the another callback
+getData((Year_User) => {
+    getYear = Year_User;
+  }, 
+  (Tvshow) => 
     {
-        //Obtendremos el genero cuando haya sido verificado el año
-        getGenre((GenreId) => 
-        {
-            requestTVShows(Year_User, GenreId);
-            evento_btnAnterior(Year_User, GenreId);
-            evento_btnSiguiente(Year_User, GenreId);
-        })
+      if(checkYear(getYear))
+      {
+          requestTVShows(getYear, Tvshow);
+      }
+      else
+      {
+          alert("Wrong Year");
+      }
     }
-    else
-    {
-        alert("Año incorrecto");
-    }
-});
+  )
+
+
