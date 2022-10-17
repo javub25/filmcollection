@@ -52,11 +52,9 @@ export const getData = (Year_User, Tvshow) => {
           menu_apartados.innerHTML = `
           <div class="menu_apartados">
               <div>
-                  <div>
-                      <span class="material-symbols-outlined">
-                      close
-                      </span>
-                  </div>
+                    <span class="material-symbols-outlined">
+                    close
+                    </span>
               </div>
               <div>
                   <a href="films.html" style="text-decoration:none; color:white">
