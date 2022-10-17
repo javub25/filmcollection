@@ -16,13 +16,23 @@ body {
 	color: #1d1d1d;
 }
 
-.header_img
+.headerTvshow
+{
+	background-image: url("https://pbs.twimg.com/profile_banners/2566443181/1402720314/1500x500");
+	background-attachment: fixed;
+	background-size: auto;
+	height:400px;
+}
+
+.headerMovie
 {
 	background-image: url("https://angular-movies-c91ba.firebaseapp.com/background-main.jpg");
 	background-attachment: fixed;
-	background-size: cover;
+	background-size: auto;
 	height:400px;
 }
+
+
 
 
 .material-symbols-outlined
@@ -64,10 +74,22 @@ input[type="number"], input[type="text"]
 	padding:2px 10px;
 }
 
+.menu_flex, .menu_apartados > :first-child
+{
+	display:flex;
+}
+
 .data
 {
 	text-align: center;
 }
+/*
+.flex_flags
+{
+	align-items: center;
+	justify-content: center;
+}
+*/
 
 .data > div
 {
@@ -122,11 +144,8 @@ p{
 }
 
 
-.menu_flex, .menu_apartados > :first-child
-{
-	display:flex;
 
-}
+
 
 .menu_flex > :first-child
 {
