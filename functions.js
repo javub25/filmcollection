@@ -49,7 +49,7 @@ export const getData = (Year_User, Tvshow) => {
       //Mostramos el menú cuando se clique en el icono del desplegable
       desplegable.addEventListener("click", () =>
       {
-          menu_apartados.innerHTML = `
+        menu_apartados.innerHTML = `
           <div class="menu_apartados">
               <div>
                     <span class="material-symbols-outlined">
@@ -72,6 +72,7 @@ export const getData = (Year_User, Tvshow) => {
               </div>
           </div>
           `;
+
           menu.appendChild(menu_apartados);
   
           const cerrar = document.getElementsByClassName("menu_apartados")[0];
@@ -96,7 +97,7 @@ export const checkYear = (Year) =>
 }
 
 //Peticion que nos saldrá los identificadores con cada uno de los nombres de cada genero
-const requestgenresTVSHOWS = () => axios.get(`https://api.themoviedb.org/3/genre/movie/list?api_key=${api_key}&language=es-ES`);
+const requestgenresTVSHOWS = () => axios.get(`https://api.themoviedb.org/3/genre/movie/list?api_key=${api_key}&language=en-eng`);
 
 
 //Peticion que obtendremos las series a partir del año escojido o del genero
@@ -112,20 +113,19 @@ export async function requestTVShows(Year, Tvshow)
         }
         else
         {
-            
             if(Year === "" && Tvshow!== "")
             {
-                respuesta = await axios.get(`https://api.themoviedb.org/3/search/tv?api_key=${api_key}&language=es-ES&page=${page}&include_adult=false&query=${Tvshow}`);
+                respuesta = await axios.get(`https://api.themoviedb.org/3/search/tv?api_key=${api_key}&language=en-eng&page=${page}&include_adult=false&query=${Tvshow}`);
             }
             else
             {
                 if(Year!=="" && Tvshow === "")
                 {
-                    respuesta = await axios.get(`https://api.themoviedb.org/3/discover/tv?api_key=${api_key}&first_air_date_year=${Year}&sort_by=first_air_date.desc&page=${page}&language=es-ES`);
+                    respuesta = await axios.get(`https://api.themoviedb.org/3/discover/tv?api_key=${api_key}&first_air_date_year=${Year}&sort_by=first_air_date.desc&page=${page}&language=en-eng`);
                 }
                 else
                 {
-                    respuesta = await axios.get(`https://api.themoviedb.org/3/search/tv?api_key=${api_key}&first_air_date_year=${Year}&language=es-ES&page=${page}&include_adult=false&query=${Tvshow}`);
+                    respuesta = await axios.get(`https://api.themoviedb.org/3/search/tv?api_key=${api_key}&first_air_date_year=${Year}&language=en-eng&page=${page}&include_adult=false&query=${Tvshow}`);
                 }
             }
         }
@@ -143,8 +143,8 @@ export async function requestTVShows(Year, Tvshow)
             {
                 const paginacion = document.querySelector(".paginacion");
                 paginacion.innerHTML = `
-                    <button id="btnAnterior">Anterior</button>
-		            <button id="btnSiguiente">Siguiente</button>
+                    <button id="btnAnterior">Previous</button>
+		            <button id="btnSiguiente">Next</button>
                 `;
                 print_buttons = true;
             }
@@ -175,10 +175,10 @@ export async function requestTVShows(Year, Tvshow)
                         
                             //Si no existe ninguna sinopsis en el servicio se lo indicamos al usuario
                             if(tvshow.overview!=='') overview = tvshow.overview;
-                            else overview = "No tenemos una sinopsis disponible.";
+                            else overview = "We do not have a synopsis available.";
                         
                             //Si no existe ninguna nota
-                            if(tvshow.vote_average === 0) TVshowMark = "No definida";
+                            if(tvshow.vote_average === 0) TVshowMark = "Not defined";
                             else TVshowMark = tvshow.vote_average;
                         
                             //De forma asincrona extraeremos los nombres de los generos coincidiendo con sus respectivos numeros
@@ -186,19 +186,19 @@ export async function requestTVShows(Year, Tvshow)
                                 .then(resolve => 
                                 {
                                     if (resolve.status === 200)
-                                            {
-                                                let datos = resolve.data, genresName = [];
+                                    {
+                                        let datos = resolve.data, genresName = [];
 
-                                                tvshow.genre_ids.forEach((id) => 
+                                            tvshow.genre_ids.forEach((id) => 
+                                            {
+                                                datos.genres.forEach((genre) => 
                                                 {
-                                                    datos.genres.forEach((genre) => 
+                                                    if(id === genre.id)
                                                     {
-                                                        if(id === genre.id)
-                                                        {
-                                                            genresName.push(genre.name);
-                                                        }
-                                                    })
+                                                        genresName.push(genre.name);
+                                                    }
                                                 })
+                                            })
 
                                             try
                                             {
@@ -208,6 +208,7 @@ export async function requestTVShows(Year, Tvshow)
                                                     <div>
                                                         <img src=${url} alt="" class="imagenPeli"/>
                                                     </div>
+                                                    
                                                     <div class="textoPeli">
                                                         <h3>
                                                             ${tvshow.original_name}
@@ -219,7 +220,7 @@ export async function requestTVShows(Year, Tvshow)
                                                             <br/><br/>
                                                             ${genresName}
                                                             <br/><br/>
-                                                            Nota: <span class="NotaPeli">${TVshowMark}</span>
+                                                            <span class="NotaPeli">${TVshowMark}</span>
                                                         </p>
                                                     </div>
                                                 </div>   
@@ -248,9 +249,9 @@ export async function requestTVShows(Year, Tvshow)
                 evento_btnSiguiente(Year, Tvshow);
             }
         }
-        else if(respuesta.status === 404) throw new Error("Serie no encontrada");
-        else if(respuesta.status === 401) throw new Error("Servidor no disponible");
-        else throw new Error("Error de Busqueda");
+        else if(respuesta.status === 404) throw new Error("Series not found");
+        else if(respuesta.status === 401) throw new Error("Server unavailable");
+        else throw new Error("Search Error");
     }
     catch(error)
     {
