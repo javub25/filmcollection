@@ -11,56 +11,104 @@
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
 	<link rel="stylesheet" href="estilos.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 	<title>TV SHOWS</title>
 </head>
 
 <body>
 	<div class="menu">
-		<div class="menu_flex">
-			<div class="menu_icon">
-				<span class="material-symbols-outlined">
-					menu
-				</span>
+
+		<div class="desktopView">
+			<div class="menu_flex">
+				<div>
+					<a href="index.html" style="text-decoration: none; color:white">
+						<span class="material-symbols-outlined">
+							home
+						</span>	
+					</a>	
+				</div>
+
+				<div style="padding-right:4%">
+					<a href="films.html" style="text-decoration:none; color:white">
+						<p>
+							MOVIES
+						</p>
+					</a>
+				</div>
+				<div style="padding-right:4%">
+					<a href="tvshows.html" style="text-decoration:none; color:white">
+						<p>
+							TV SHOWS
+						</p>
+					</a>
+				</div>
+
+				<div style="padding-right:4%">
+					<a href="genres.html" style="text-decoration:none; color:white">
+						<p>
+							GENRES
+						</p>
+					</a>
+				</div>
+				<div>
+					<p>
+						Film Collection
+					</p>
+				</div>
 			</div>
-			<div>
-	
-			</div>
-			<div>
-                <a href="index.html" style="text-decoration: none; color:white">
-                    <span class="material-symbols-outlined">
-                        home
-                    </span>	
-                </a>	
-			</div>
-			<div>
-				<p>
-					Film Collection
-				</p>
+		</div>
+
+		<div class="mobileView">
+			<div class="menu_flex">
+				<div class="menu_icon">
+					<span class="material-symbols-outlined">
+						menu
+					</span>
+				</div>
+				<div>
+		
+				</div>
+				<div>
+					<a href="index.html" style="text-decoration: none; color:white">
+						<span class="material-symbols-outlined">
+							home
+						</span>	
+					</a>	
+				</div>
+				<div>
+					<p>
+						Film Collection
+					</p>
+				</div>
 			</div>
 		</div>
 	</div>
 
-	<div class="headerTvshow">
-		
+	<div class="mobileView">
+		<div class="dropdown_hidden">
+		</div>
+	</div>
+	
+	<div class="headerTvshow">	
 	</div>
 	<div class="paddingMobile">
-		<h1>TV SHOWS</h1>
+		<h1 class="animate__animated animate__fadeIn">TV SHOWS</h1>
 	</div>
 	
 
 	<form action="tvshows.js" method="post" class="FormData">
-		<div class="data">
-			<div>
+		<div class="data ">
+			<div class="animate__animated animate__fadeIn">
 				<p>Year</p>
 			</div>
-			<div>
+			<div class="animate__animated animate__fadeIn">
 				<input type="number" name="Year"></input>
 			</div>
 
-			<div>
+			<div class="animate__animated animate__fadeIn">
 				<p>Name</p>
 			</div>
-			<div>
+			<div class="animate__animated animate__fadeIn">
 				<input type="text" name="Tvshow"></input>
 			</div>
 
@@ -79,7 +127,7 @@
 			-->
 		</div>
 
-		<div class="button" style="margin:auto">
+		<div class="button animate__animated animate__bounceIn" style="margin:auto">
 			<div style="padding-right:9px; margin-bottom:5px">
 				Send
 			</div>
@@ -92,9 +140,9 @@
 		</div>
 	</form>
 
-	<div class="contenedor" id="contenedor"></div>
+	<div class="tvshowsContainer"></div>
 
-	<div class="paginacion">
+	<div id="buttons" class="buttons_hidden">
 				
 	</div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.27.2/axios.min.js" integrity="sha512-odNmoc1XJy5x1TMVMdC7EMs3IVdItLPlCeL5vSUPN2llYKMJ2eByTTAIiiuqLg+GdNr9hF6z81p27DArRFKT7A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
