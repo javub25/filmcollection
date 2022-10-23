@@ -10,33 +10,83 @@
 	
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
 	<link rel="stylesheet" href="estilos.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 	<title>Film Collection</title>
 </head>
 
 <body>
 	<div class="menu">
-		<div class="menu_flex">
-			<div class="menu_icon">
-				<span class="material-symbols-outlined">
-					menu
-				</span>
-			</div>
 
-			<div>
-				<a href="index.html" style="text-decoration: none; color:white">
-                    <span class="material-symbols-outlined">
-                        home
-                    </span>	
-                </a>
-			</div>
+		<div class="desktopView">
+			<div class="menu_flex">
+				<div>
+					<a href="index.html" style="text-decoration: none; color:white">
+						<span class="material-symbols-outlined">
+							home
+						</span>	
+					</a>	
+				</div>
 
-			<div>
-				<p>
-					Film Collection
-				</p>
+				<div style="padding-right:4%">
+					<a href="films.html" style="text-decoration:none; color:white">
+						<p>
+							MOVIES
+						</p>
+					</a>
+				</div>
+				<div style="padding-right:4%">
+					<a href="tvshows.html" style="text-decoration:none; color:white">
+						<p>
+							TV SHOWS
+						</p>
+					</a>
+				</div>
+
+				<div style="padding-right:4%">
+					<a href="genres.html" style="text-decoration:none; color:white">
+						<p>
+							GENRES
+						</p>
+					</a>
+				</div>
+				<div>
+					<p>
+						Film Collection
+					</p>
+				</div>
+			</div>
+		</div>
+		
+		<div class="mobileView">
+			<div class="menu_flex">
+				<div class="menu_icon">
+					<span class="material-symbols-outlined">
+						menu
+					</span>
+				</div>
+				<div>
+		
+				</div>
+				<div>
+					<a href="index.html" style="text-decoration: none; color:white">
+						<span class="material-symbols-outlined">
+							home
+						</span>	
+					</a>	
+				</div>
+				<div>
+					<p>
+						Film Collection
+					</p>
+				</div>
 			</div>
 		</div>
 	</div>
+	<div class="mobileView">
+		<div class="dropdown_hidden">
+		</div>
+	</div>
+	
 	<script type="module" src="index.js"></script>
 </body>
 </html>
