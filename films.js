@@ -1,8 +1,8 @@
-import { Menu, evento_btnAnterior, evento_btnSiguiente} from "./functions.js";
+import { Menu, Previousbtn_event, Nextbtn_event} from "./functions.js";
 
 Menu();
-evento_btnAnterior();
-evento_btnSiguiente();
+Previousbtn_event();
+Nextbtn_event();
 
 
 
