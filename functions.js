@@ -34,10 +34,8 @@ export const getData = (Year_User, Tvshow) => {
         const Form = document.querySelector(".FormData");
         const Year = new FormData(Form).get("Year");
         const tvshow = new FormData(Form).get("Tvshow");
-        const chosen = new FormData(Form).get("language");
         Year_User(Year);
         Tvshow(tvshow);
-        language(chosen);
     });
   }
 
@@ -113,11 +111,11 @@ export const checkYear = (Year) =>
 }
 
 //Request that will give us the identifiers with each of the names of each gender
-const requestgenresTVSHOWS = (language) => axios.get(`https://api.themoviedb.org/3/genre/movie/list?api_key=${api_key}&language=${language}`);
+const requestgenresTVSHOWS = () => axios.get(`https://api.themoviedb.org/3/genre/movie/list?api_key=${api_key}&language=en-ENG`);
 
 
 //Request that we will obtain tvshows from year chosen or gender
-export async function requestTVShows(Year, Tvshow, language) 
+export async function requestTVShows(Year, Tvshow) 
 {
     try
     { 
@@ -133,19 +131,19 @@ export async function requestTVShows(Year, Tvshow, language)
             //When user only specify Tvshow
             if(Year === "" && Tvshow!== "")
             {
-                respuesta = await axios.get(`https://api.themoviedb.org/3/search/tv?api_key=${api_key}&language=${language}&page=${page}&include_adult=false&query=${Tvshow}`);
+                respuesta = await axios.get(`https://api.themoviedb.org/3/search/tv?api_key=${api_key}&language=en-ENG&page=${page}&include_adult=false&query=${Tvshow}`);
             }
             else
             {
                 //When user only specify Year
                 if(Year!=="" && Tvshow === "")
                 {
-                    respuesta = await axios.get(`https://api.themoviedb.org/3/discover/tv?api_key=${api_key}&first_air_date_year=${Year}&sort_by=first_air_date.desc&page=${page}&language=${language}`);
+                    respuesta = await axios.get(`https://api.themoviedb.org/3/discover/tv?api_key=${api_key}&first_air_date_year=${Year}&sort_by=first_air_date.desc&page=${page}&language=en-ENG`);
                 }
                 //When user specify both
                 else
                 {
-                    respuesta = await axios.get(`https://api.themoviedb.org/3/search/tv?api_key=${api_key}&first_air_date_year=${Year}&language=${language}&page=${page}&include_adult=false&query=${Tvshow}`);
+                    respuesta = await axios.get(`https://api.themoviedb.org/3/search/tv?api_key=${api_key}&first_air_date_year=${Year}&language=en-ENG&page=${page}&include_adult=false&query=${Tvshow}`);
                 }
             }
         }
@@ -246,7 +244,7 @@ export async function requestTVShows(Year, Tvshow, language)
                             }
 
                             //We call genres function to show each genre name
-                            requestgenresTVSHOWS(language)
+                            requestgenresTVSHOWS()
                                 .then(resolve => 
                                 {
                                     if (resolve.status === 200)
