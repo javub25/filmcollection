@@ -34,8 +34,10 @@ export const getData = (Year_User, Tvshow) => {
         const Form = document.querySelector(".FormData");
         const Year = new FormData(Form).get("Year");
         const tvshow = new FormData(Form).get("Tvshow");
+        const chosen = new FormData(Form).get("language");
         Year_User(Year);
         Tvshow(tvshow);
+        language(chosen);
     });
   }
 
@@ -53,7 +55,7 @@ export const getData = (Year_User, Tvshow) => {
             dropdown_list.innerHTML = `          
               <div class="close">
                     <span class="material-symbols-outlined">
-                    close
+                    &#xe5cd;
                     </span>
               </div>
               <div>
@@ -97,21 +99,25 @@ export const getData = (Year_User, Tvshow) => {
 //Let's check that the year is correct
 export const checkYear = (Year) =>
 {
+    //To check if year is correct or not, it will necessary some value on it
     if(Year!=="")
     {
-         //Expression that checks that the year is between 1900 and 2080
-        let expr = new RegExp(/^(19|20)[\d]{2,2}$/);
+        //Expression that checks that the year is between 1900 and 2099
+        let expr = new RegExp(/^(19|20)[0-9][0-9]$/);
         return expr.test(Year);
     }
-    else return true;
+    //Otherwise will return true
+    else {
+        return true;
+    }
 }
 
 //Request that will give us the identifiers with each of the names of each gender
-const requestgenresTVSHOWS = () => axios.get(`https://api.themoviedb.org/3/genre/movie/list?api_key=${api_key}&language=en-eng`);
+const requestgenresTVSHOWS = (language) => axios.get(`https://api.themoviedb.org/3/genre/movie/list?api_key=${api_key}&language=${language}`);
 
 
 //Request that we will obtain tvshows from year chosen or gender
-export async function requestTVShows(Year, Tvshow) 
+export async function requestTVShows(Year, Tvshow, language) 
 {
     try
     { 
@@ -127,19 +133,19 @@ export async function requestTVShows(Year, Tvshow)
             //When user only specify Tvshow
             if(Year === "" && Tvshow!== "")
             {
-                respuesta = await axios.get(`https://api.themoviedb.org/3/search/tv?api_key=${api_key}&language=en-eng&page=${page}&include_adult=false&query=${Tvshow}`);
+                respuesta = await axios.get(`https://api.themoviedb.org/3/search/tv?api_key=${api_key}&language=${language}&page=${page}&include_adult=false&query=${Tvshow}`);
             }
             else
             {
                 //When user only specify Year
                 if(Year!=="" && Tvshow === "")
                 {
-                    respuesta = await axios.get(`https://api.themoviedb.org/3/discover/tv?api_key=${api_key}&first_air_date_year=${Year}&sort_by=first_air_date.desc&page=${page}&language=en-eng`);
+                    respuesta = await axios.get(`https://api.themoviedb.org/3/discover/tv?api_key=${api_key}&first_air_date_year=${Year}&sort_by=first_air_date.desc&page=${page}&language=${language}`);
                 }
                 //When user specify both
                 else
                 {
-                    respuesta = await axios.get(`https://api.themoviedb.org/3/search/tv?api_key=${api_key}&first_air_date_year=${Year}&language=en-eng&page=${page}&include_adult=false&query=${Tvshow}`);
+                    respuesta = await axios.get(`https://api.themoviedb.org/3/search/tv?api_key=${api_key}&first_air_date_year=${Year}&language=${language}&page=${page}&include_adult=false&query=${Tvshow}`);
                 }
             }
         }
@@ -156,6 +162,9 @@ export async function requestTVShows(Year, Tvshow)
             
             //We're gonna access to id buttons to manage when results returns one or more than one page
             const buttons = document.querySelector("#buttons");
+            //Variable that will show all tvshows in html
+            const TvshowContainer = document.querySelector(".tvshowsContainer");
+
 
             //When the next animate class exists will remove it
             if(buttons.classList.contains("animate__fadeOutDown"))
@@ -172,19 +181,33 @@ export async function requestTVShows(Year, Tvshow)
 		            <button id="Nextbtn">Next</button>
                 `;
                 print_buttons = true;
+
+                /*With more than one results our container will has threeColumns*/
+                TvshowContainer.classList.add("threeColumns");
+                TvshowContainer.classList.remove("oneColumn");
             }
-            //In the case that the request has returned one page, we will hid them 
-            else
+            //In the case that the request has returned one page, we will hid them
+            
+            else if(total_pages === 1)
             {
                 if(buttons.classList.contains("showButtons"))
                 {
                     buttons.innerHTML = "";
                     buttons.classList.add('buttons_hidden', 'animate__fadeOutDown');
                     buttons.classList.remove('animate__fadeInUp');
+
+                    /*Besides animations we're gonna modify our tvshows container to
+                    show just one column*/
+                    TvshowContainer.classList.remove("threeColumns");
+                    TvshowContainer.classList.add("oneColumn");
                 }
             }
-            //Variable that will show all tvshows in html
-            const tvshowsContainer = document.querySelector(".tvshowsContainer");
+            //In the case that the request hasn't returned any page
+            else
+            {
+                alert("No results");
+            }
+            
             let show = '';
             //We're gonna show just tvshows from united states, spain, france and united kingdom
             const countries_available = ["US", "ES", "FR", "GB"];
@@ -205,15 +228,25 @@ export async function requestTVShows(Year, Tvshow)
                             else url = `https://www.themoviedb.org/assets/2/v4/glyphicons/basic/glyphicons-basic-38-picture-grey-c2ebdbb057f2a7614185931650f8cee23fa137b93812ccb132b9df511df1cfac.svg`;
                         
                             //If there is no synopsis in the service, we indicate it to the user
-                            if(tvshow.overview!=='') overview = tvshow.overview;
-                            else overview = "We do not have a synopsis available.";
+
+                            if(tvshow.overview == '')
+                            {
+                                 overview = "We do not have a synopsis available.";
+                            }
+                            else overview = tvshow.overview;
                         
                             //If there is no mark
-                            if(tvshow.vote_average === 0) TVshowMark = "Not defined";
-                            else TVshowMark = tvshow.vote_average;
+                            if(tvshow.vote_average === 0)
+                            {
+                                TVshowMark = "Not defined";
+                            }
+                            else
+                            {
+                                TVshowMark = tvshow.vote_average;
+                            }
 
                             //We call genres function to show each genre name
-                            requestgenresTVSHOWS()
+                            requestgenresTVSHOWS(language)
                                 .then(resolve => 
                                 {
                                     if (resolve.status === 200)
@@ -237,7 +270,7 @@ export async function requestTVShows(Year, Tvshow)
                                             {
                                                 show+= 
                                                 `
-                                                <div>
+                                                <div class="animate__animated animate__zoomIn">
                                                     <div>
                                                         <img src=${url} alt="" class="image"/>
                                                     </div>
@@ -259,7 +292,7 @@ export async function requestTVShows(Year, Tvshow)
                                                     </div>
                                                 </div>   
                                                 `
-                                                tvshowsContainer.innerHTML = show;
+                                                TvshowContainer.innerHTML = show;
                                             }
                                             catch(error)
                                             {
